@@ -39,20 +39,17 @@ function Login() {
             // Form is valid, proceed with form submission
             
             // Check if login was successful
-            console.log(res.data)
-            if (true) {
-                console.log("true block",res.data)
+          
+            console.log("true block",res.data.message)
+            if (res.data.message) {
 
                 // Reset form data
                 setFormData({ email: "", password: "" });
                 localStorage.setItem("userinfo",JSON.stringify(res.data))
                 router.push("/profile");
-                
+
                 // Show success message
                 toast.success("Login successful!");
-            } else {
-                // Show error message
-                toast.error("Incorrect email or password");
             }
         } catch (error) {
             // Handle form submission error
@@ -71,7 +68,6 @@ function Login() {
     return (
         <>
             <form className="max-w-sm mx-auto w-96" onSubmit={handleSubmit}>
-                <h1>Helo chages is occupiyed</h1>
                 <div className="mb-5">
                     <label
                         htmlFor="email"

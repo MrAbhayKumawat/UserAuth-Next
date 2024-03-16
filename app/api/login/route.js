@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import User from "@/models/user";
-import connectToMongoDB from "@/lib/mongodb"; // Fixed typo in "mongodb"
+import connectToMongoDB from "@/lib/monogdb";
 import jwt from "jsonwebtoken";
+connectToMongoDB(); // Connect to MongoDB
 
 export async function POST(req) {
     try {
-        await connectToMongoDB(); // Connect to MongoDB
         const { email, password } = await req.json(); // Parse JSON data from request body
 
         // Use findOne instead of findone
@@ -15,30 +15,28 @@ export async function POST(req) {
             console.log("User found:", user);
             
             // Check if the passwords match (consider using password hashing for security)
-            const passwordsMatch = user.password === password; // This is a basic comparison, consider using a secure method for comparing passwords
-
-            if (passwordsMatch) {
+            if (user.password === password) {
                 const tokendata = {
                     username: user.name,
                     id: user._id
                 }
-                const token = jwt.sign(tokendata, process.env.jwt_SECRET_KEY, { expiresIn: "15m" }); // Corrected expiresIn to "15m" for 15 minutes
+                const token = jwt.sign(tokendata, process.env.jwt_SECRET_KEY, { expiresIn: "900" });
 
                 // Set the token as a cookie
-                const response = NextResponse.json({ message: "true", userinfo: { username: user.name, useremail: user.email }, status: 200 });
+                const response = NextResponse.json({ message: "true", userinfo: { username: user.name, useremail: user.email },status:200 });
                 response.cookies.set("token", token, { httpOnly: true });
 
                 // Return the response
                 return response;    
             } else {
-                return NextResponse.json({ message: "Incorrect password", status: 401 }); // Set status code to 401 for unauthorized
+                return NextResponse.json({ message: "Incorrect password" });
             }
         } else {
             console.log("User not found");
-            return NextResponse.json({ message: "User not found", status: 404 }); // Set status code to 404 for not found
+            return NextResponse.json({ message: "User not found" });
         }
     } catch (error) {
         console.error("Error:", error);
-        return NextResponse.json({ message: "An error occurred", error, status: 500 }); // Set status code to 500 for internal server error
+        return NextResponse.json({ message: "An error occurred in login api", error });
     }
 }
