@@ -20,7 +20,8 @@ export async function POST(req) {
                     username: user.name,
                     id: user._id
                 }
-                const token = jwt.sign(tokendata, process.env.jwt_SECRET_KEY, { expiresIn: "900" });
+                const jwt_SECRET_KEY = "nextjswithmongodbuserauth-by-abhay"
+                const token = jwt.sign(tokendata, jwt_SECRET_KEY, { expiresIn: "900" });
 
                 // Set the token as a cookie
                 const response = NextResponse.json({ message: "true", userinfo: { username: user.name, useremail: user.email },status:200 });
