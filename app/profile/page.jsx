@@ -5,15 +5,14 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 function Profile() {
-
-  const [userdata,setuserdata] = useState("")
+  const [userdata, setuserdata] = useState("");
   const router = useRouter();
 
   useEffect(() => {
     const userinfo = localStorage.getItem("userinfo");
 
-    const parseduserdata = JSON.parse(userinfo)
-    setuserdata(parseduserdata.userinfo)
+    const parseduserdata = JSON.parse(userinfo);
+    setuserdata(parseduserdata.userinfo);
   }, []);
 
   const handleLogout = async () => {
@@ -26,7 +25,7 @@ function Profile() {
       console.error("Error logging out:", error);
     }
   };
-  console.log(userdata)
+  console.log(userdata);
 
   return (
     <>
@@ -46,9 +45,10 @@ function Profile() {
           />
         </div>
         <div className="text-center mt-2">
-
-          <h1 className="text-xl">{userdata.username}</h1><br/>
-          <strong>Email : </strong><span>{userdata.useremail}</span>
+          <h1 className="text-xl">{userdata.username}</h1>
+          <br />
+          <strong>Email : </strong>
+          <span>{userdata.useremail}</span>
         </div>
 
         <div className="p-4 border-t mx-8 mt-2">

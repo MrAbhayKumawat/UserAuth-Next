@@ -1,12 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import Link from "next/link";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-function Login() {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+function ForgotPassword() {
+  const [formData, setFormData] = useState({ email: "", Newpassword: "" });
   const [errors, setErrors] = useState({});
   const router = useRouter();
 
@@ -22,32 +21,28 @@ function Login() {
         isValid = false;
       }
 
-      if (!formData.password.trim()) {
-        errors.password = "Password is required";
+      if (!formData.Newpassword.trim()) {
+        errors.Newpassword = "NewPassword is required";
         isValid = false;
       }
 
-      // If form is invalid, set errors and return
       if (!isValid) {
         setErrors(errors);
         return;
       }
 
-      const res = await axios.post("/api/login", formData);
+      const res = await axios.put("/api/updatePass", formData);
 
       console.log("true block", res.data);
-      if (res.data.message == "true") {
-        setFormData({ email: "", password: "" });
-        localStorage.setItem("userinfo", JSON.stringify(res.data));
-        router.push("/profile");
+      if (res.data.msg == "Updated data successfully") {
+        setFormData({ email: "", Newpassword: "" });
+        router.push("/login");
 
-        toast.success("Login successful!");
-      } else {
-        toast.error(res.data.message);
+        toast.success("Password Updated successful!");
       }
     } catch (error) {
       console.error("Form submission error:", error);
-      toast.error("Failed to login. Please try again later.");
+      toast.error("Failed to UpdatePas. Please try again later.");
     }
   };
 
@@ -65,7 +60,7 @@ function Login() {
             htmlFor="email"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
-            Your email
+            email
           </label>
           <input
             type="email"
@@ -83,56 +78,36 @@ function Login() {
         </div>
         <div className="mb-5">
           <label
-            htmlFor="password"
+            htmlFor="Newpassword"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
-            Your password
+            New password
           </label>
           <input
             type="password"
-            id="password"
-            name="password"
-            value={formData.password}
+            id="Newpassword"
+            name="Newpassword"
+            placeholder="New password
+                      "
+            value={formData.Newpassword}
             onChange={handleChange}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             required
           />
-          {errors.password && (
-            <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+          {errors.Newpassword && (
+            <p className="text-red-500 text-sm mt-1">{errors.Newpassword}</p>
           )}
         </div>
-        <div className="flex items-start mb-5 justify-end">
-          <div className="flex items-center h-5 "></div>
-          <label
-            htmlFor="remember"
-            className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-          >
-            <Link href={"/updatePass"} className="text-blue-600">
-              Forgot password?
-            </Link>
-          </label>
-        </div>
+
         <button
           type="submit"
           className="w-96 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
-          Submit
+          Update Password
         </button>
-        <div className="flex items-start mb-5 mt-8 justify-center">
-          <div className="flex items-center h-5"></div>
-          <label
-            htmlFor="remember"
-            className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-          >
-            Don't have an account?
-            <Link href={"/register"} className="text-blue-600">
-              Register
-            </Link>
-          </label>
-        </div>
       </form>
     </>
   );
 }
 
-export default Login;
+export default ForgotPassword;
